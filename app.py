@@ -26,10 +26,6 @@ def get_data():
     data_as_dict = data_frame.reset_index().to_dict(orient='records')
     return jsonify(data_as_dict)
 
-
-
-
-
 @app.route('/api/data/<string:name>/<string:notes>', methods=['PATCH'])
 def update_data(name, notes):
     # Como os nomes tem espaços, precisa arrumar pra leitura correta
@@ -37,18 +33,13 @@ def update_data(name, notes):
     notes = notes.replace('%20', ' ') 
 
     if name in data_frame.index:
-        # Atualiza a coluna 'notes'
         data_frame.loc[name, 'notes'] = notes
         save_data()
         
-        # Converte pra json
         data_as_dict = data_frame.reset_index().to_dict(orient='records')
         return jsonify(data_as_dict), 200
     else:
         return jsonify({"error": "Nome do vinho não encontrado"}), 404
-
-
-
 
 
 @app.route('/api/data/<string:name>', methods=['DELETE'])
@@ -63,11 +54,6 @@ def delete_data(name):
         return jsonify({"message": "Registro deletado com sucesso"}), 200
     else:
         return jsonify({"error": "Nome do vinho não encontrado"}), 404
-
-
-
-
-
 
 
 @app.route('/api/data', methods=['POST'])
@@ -90,8 +76,6 @@ def insert_data():
     save_data()
 
     return jsonify({'message': 'Data added successfully'}), 201
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
