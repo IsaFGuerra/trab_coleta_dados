@@ -29,6 +29,8 @@ def get_data():
     data_as_dict = data_frame.to_dict(orient='records')
     return jsonify(data_as_dict)
 
+
+#atualizar os comentarios sobre os vinhos
 @app.route('/api/data/<string:name>/<string:notes>', methods=['PATCH'])
 def update_data(name, notes):
     name = name.replace('%20', ' ')
@@ -37,8 +39,11 @@ def update_data(name, notes):
     if name in data_frame['name'].values:
         data_frame.loc[data_frame['name'] == name, 'notes'] = notes
         save_data()
+
+        modified_row = data_frame.loc[data_frame['name'] == name]
+
+        data_as_dict = modified_row.to_dict(orient='records')
         
-        data_as_dict = data_frame.to_dict(orient='records')
         return jsonify(data_as_dict), 200
     else:
         return jsonify({"error": "Nome do vinho não encontrado"}), 404
